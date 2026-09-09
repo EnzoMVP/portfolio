@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "about": "Sobre",
+    "skills": "Habilidades",
+    "studies": "Formação",
+    "certifications": "Certificações",
+    "projects": "Projetos",
+    "contact": "Contato"
+  },
+  "hero": {
+    "label": "[ ML Engineer ]",
+    "manifesto": "Modelos não são mágica,\nsão decisões,\ntomadas deliberadamente.",
+    "cta": "Ver projetos"
+  },
+  "about": {
+    "heading": "Sobre",
+    "body": "TODO: substituir pela bio real — algumas frases sobre sua trajetória, foco dentro de ML engineering e o que você está buscando."
+  },
+  "studies": {
+    "heading": "Formação",
+    "items": [
+      {
+        "school": "TODO: nome da instituição",
+        "degree": "TODO: curso / programa",
+        "period": "TODO: ex. 2022 — 2026"
+      }
+    ]
+  },
+  "skills": {
+    "heading": "Habilidades",
+    "empty": "As habilidades vão aparecer aqui assim que forem adicionadas no CMS.",
+    "categories": {
+      "languages": "Linguagens",
+      "ml-ai": "ML / IA",
+      "data": "Dados",
+      "tools": "Ferramentas & Plataformas",
+      "other": "Outros"
+    }
+  },
+  "projects": {
+    "heading": "Projetos",
+    "empty": "Os projetos vão aparecer aqui assim que forem adicionados no CMS.",
+    "viewRepo": "Ver repositório",
+    "viewLive": "Demo ao vivo",
+    "readMore": "Ler mais"
+  },
+  "certifications": {
+    "heading": "Certificações"
+  },
+  "contact": {
+    "heading": "Contato",
+    "intro": "Fale diretamente comigo — eu leio tudo.",
+    "downloadCv": "Baixar CV",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "github": "GitHub"
+  },
+  "footer": {
+    "rights": "Todos os direitos reservados."
+  }
+}

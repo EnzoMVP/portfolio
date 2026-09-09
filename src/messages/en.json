@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "about": "About",
+    "skills": "Skills",
+    "studies": "Studies",
+    "certifications": "Certifications",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "label": "[ ML Engineer ]",
+    "manifesto": "Models are not magic,\nthey are decisions,\nmade deliberately.",
+    "cta": "View projects"
+  },
+  "about": {
+    "heading": "About",
+    "body": "TODO: replace with real bio — a few sentences on your background, focus area within ML engineering, and what you're looking for."
+  },
+  "studies": {
+    "heading": "Education",
+    "items": [
+      {
+        "school": "TODO: institution name",
+        "degree": "TODO: degree / program",
+        "period": "TODO: e.g. 2022 — 2026"
+      }
+    ]
+  },
+  "skills": {
+    "heading": "Skills",
+    "empty": "Skills will appear here once added in the CMS.",
+    "categories": {
+      "languages": "Languages",
+      "ml-ai": "ML / AI",
+      "data": "Data",
+      "tools": "Tools & Platforms",
+      "other": "Other"
+    }
+  },
+  "projects": {
+    "heading": "Projects",
+    "empty": "Projects will appear here once added in the CMS.",
+    "viewRepo": "View repo",
+    "viewLive": "Live demo",
+    "readMore": "Read more"
+  },
+  "certifications": {
+    "heading": "Certifications"
+  },
+  "contact": {
+    "heading": "Contact",
+    "intro": "Reach out directly — I read everything.",
+    "downloadCv": "Download CV",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "github": "GitHub"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}

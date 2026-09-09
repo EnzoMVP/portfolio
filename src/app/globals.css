@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+/*
+  Design tokens — single source of truth for the palette.
+  Combined from the two Coolors references (cores2 warm olive-grey,
+  cores3 stark black/white/grey) plus the rock-hero moodboard tones.
+  No visitor-facing theme switch: this is the one locked palette.
+  Swap hex values here only — components consume the Tailwind
+  utilities generated from these (bg-bg, text-fg, etc.), never raw hex.
+*/
+@theme {
+  --color-bg: #fefeff;
+  --color-bg-inverse: #010001;
+  --color-fg: #010001;
+  --color-fg-inverse: #fefeff;
+  --color-fg-muted: #545653;
+
+  --color-surface-1: #979992;
+  --color-surface-2: #636560;
+  --color-surface-3: #5e605c;
+  --color-surface-4: #484948;
+
+  --color-border: #a9a9a9;
+  --color-border-strong: #959595;
+
+  --font-sans: var(--font-body-local);
+  --font-display: var(--font-display-local);
+  --font-mono: var(--font-mono-local);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
