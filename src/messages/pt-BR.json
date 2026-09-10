@@ -28,15 +28,7 @@
     ]
   },
   "skills": {
-    "heading": "Habilidades",
-    "empty": "As habilidades vão aparecer aqui assim que forem adicionadas no CMS.",
-    "categories": {
-      "languages": "Linguagens",
-      "ml-ai": "ML / IA",
-      "data": "Dados",
-      "tools": "Ferramentas & Plataformas",
-      "other": "Outros"
-    }
+    "heading": "Habilidades"
   },
   "projects": {
     "heading": "Projetos",

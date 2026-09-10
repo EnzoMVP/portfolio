@@ -25,7 +25,7 @@ npx sanity init                               # create/link a project, dataset "
 npx sanity cors add https://<domain> --credentials   # after deploying, so /studio works in prod
 ```
 
-Content is edited at `/studio` (embedded Sanity Studio, not a separate app). Until `NEXT_PUBLIC_SANITY_PROJECT_ID` is set (see `.env.example`), every query in `src/lib/sanity/queries.ts` short-circuits to `[]`/`null` via `isSanityConfigured` (`src/sanity/env.ts`) — sections render their empty-state copy instead of throwing. If Projects/Skills/Certifications look empty, check env vars before assuming a data-fetching bug.
+Content is edited at `/studio` (embedded Sanity Studio, not a separate app). Until `NEXT_PUBLIC_SANITY_PROJECT_ID` is set (see `.env.example`), every query in `src/lib/sanity/queries.ts` short-circuits to `[]`/`null` via `isSanityConfigured` (`src/sanity/env.ts`) — sections render their empty-state copy instead of throwing. If Projects/Certifications look empty, check env vars before assuming a data-fetching bug. Skills is the exception — see below.
 
 ## Architecture
 
@@ -43,7 +43,7 @@ Content is edited at `/studio` (embedded Sanity Studio, not a separate app). Unt
 
 ### Sanity
 
-- Schema source of truth: `src/sanity/schemaTypes/*` (types: `project`, `skill`, `certification`, `siteSettings`, plus the locale object types). Registered in `schemaTypes/index.ts`, consumed by root `sanity.config.ts` (which powers the embedded `/studio` route at `src/app/studio/[[...tool]]/page.tsx`).
+- Schema source of truth: `src/sanity/schemaTypes/*` (types: `project`, `skill`, `certification`, `siteSettings`, plus the locale object types). Registered in `schemaTypes/index.ts`, consumed by root `sanity.config.ts` (which powers the embedded `/studio` route at `src/app/studio/[[...tool]]/page.tsx`). The `skill` schema and `getSkills()` (`src/lib/sanity/queries.ts`) are currently unused — see the Skills note below — kept in case that section moves back to the CMS.
 - Data access goes through `src/lib/sanity/queries.ts` (GROQ) → `client.ts` → components. Never query Sanity directly from a component.
 - `next.config.ts` sets `serverExternalPackages: ["sanity", "next-sanity", "@sanity/vision"]`. This is required, not optional: Turbopack (the default bundler for both `next dev` and `next build` in v16) otherwise tries to pull Sanity's client-only bundle into the RSC graph and fails resolving `swr`'s `react-server` export condition. If you see a build error about `swr`/`react-server` mentioning Sanity files, check this config first.
 
@@ -53,7 +53,9 @@ All color/font tokens live in one `@theme` block in `src/app/globals.css` (Tailw
 
 ### Content still owned by the site owner (not in this repo's code)
 
-`src/messages/*.json` has literal `TODO:` placeholders for `about.body` and `studies.items`; `public/cv/cv-en.pdf` / `cv-pt.pdf` are placeholder PDFs. Real Projects/Skills/Certifications are added through `/studio`, not committed as code.
+`src/messages/*.json` has literal `TODO:` placeholders for `about.body` and `studies.items`; `public/cv/cv-en.pdf` / `cv-pt.pdf` are placeholder PDFs. Real Projects/Certifications are added through `/studio`, not committed as code.
+
+**Skills is the one exception**: the marquee (`src/components/sections/Skills.tsx` + `SkillsMarquee.tsx`) reads a hardcoded list from `src/lib/skills-data.ts` (name, react-icons brand icon, official brand color per entry) instead of Sanity — a deliberate call for this specific curated set of logo badges, not a temporary stub. Editing skills in `/studio` has no effect on this section; edit `skills-data.ts` directly.
 
 ## Git Workflow
 

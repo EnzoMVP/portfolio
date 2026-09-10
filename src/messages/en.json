@@ -28,15 +28,7 @@
     ]
   },
   "skills": {
-    "heading": "Skills",
-    "empty": "Skills will appear here once added in the CMS.",
-    "categories": {
-      "languages": "Languages",
-      "ml-ai": "ML / AI",
-      "data": "Data",
-      "tools": "Tools & Platforms",
-      "other": "Other"
-    }
+    "heading": "Skills"
   },
   "projects": {
     "heading": "Projects",
