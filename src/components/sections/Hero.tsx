@@ -14,10 +14,10 @@ export async function Hero() {
           <p className="mb-6 font-mono text-xs tracking-widest text-surface-2 uppercase">
             [ {t("location")} ]
           </p>
-          <h1 className="font-display text-4xl leading-[1.05] font-bold tracking-tight text-fg-inverse uppercase sm:text-6xl md:text-7xl">
+          <h1 className="font-display text-3xl leading-[1.1] font-bold tracking-tight text-fg-inverse uppercase sm:text-4xl md:text-5xl">
             {t("name")}
           </h1>
-          <p className="mt-4 font-display text-xl font-medium tracking-tight text-surface-1 uppercase sm:text-2xl md:text-3xl">
+          <p className="mt-4 font-display text-base font-medium tracking-tight text-surface-1 uppercase sm:text-lg md:text-xl">
             {t("role")}
           </p>
           <a
