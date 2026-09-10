@@ -3,22 +3,26 @@
 import { useEffect, useRef } from "react";
 
 type Node = {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
+  angle: number;
+  angularSpeed: number;
+  r: number;
+  targetR: number;
+  radialSpeed: number;
   radius: number;
   color: string;
+  x: number;
+  y: number;
 };
 
-const NODE_COUNT = 46;
-const MAX_LINK_DIST = 130;
-const SPEED_MIN = 0.15;
-const SPEED_MAX = 0.5;
+const NODE_COUNT = 36;
+const MAX_LINK_DIST = 100;
+const CONFINE_RATIO = 0.34; // fraction of min(width, height) nodes stay within
+const CONFINE_MAX = 300; // px cap so it doesn't sprawl on very large screens
 
 /**
- * Nodes spawn at the section's center and drift outward to the edges,
- * respawning once off-screen. Drawn with the "lighter" composite mode
+ * Nodes burst outward from the section's center once on load, then settle
+ * into a slow orbit confined to a central radius — they never drift to the
+ * edges after that initial reveal. Drawn with the "lighter" composite mode
  * so overlapping nodes/edges blend into brighter tones instead of
  * flattening — the palette overlap the design calls for.
  */
@@ -53,42 +57,46 @@ export function HeroNetworkBackground() {
 
     let width = 0;
     let height = 0;
+    let centerX = 0;
+    let centerY = 0;
+    let confineRadius = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     function resize() {
       const rect = canvas!.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
+      centerX = width / 2;
+      centerY = height / 2;
+      confineRadius = Math.min(Math.min(width, height) * CONFINE_RATIO, CONFINE_MAX);
       canvas!.width = width * dpr;
       canvas!.height = height * dpr;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    function spawnNode(): Node {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = SPEED_MIN + Math.random() * (SPEED_MAX - SPEED_MIN);
-      return {
-        x: width / 2,
-        y: height / 2,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        radius: 1 + Math.random() * 1.8,
+    function spawnNode(instant: boolean): Node {
+      const targetR = confineRadius * (0.25 + Math.random() * 0.75);
+      const angularDirection = Math.random() < 0.5 ? -1 : 1;
+      const node: Node = {
+        angle: Math.random() * Math.PI * 2,
+        angularSpeed: angularDirection * (0.0025 + Math.random() * 0.006),
+        r: instant ? targetR : 0,
+        targetR,
+        radialSpeed: targetR / (50 + Math.random() * 40),
+        radius: 2 + Math.random() * 2.6,
         color: palette[Math.floor(Math.random() * palette.length)],
+        x: centerX,
+        y: centerY,
       };
+      return node;
     }
 
     resize();
 
-    const nodes: Node[] = Array.from({ length: NODE_COUNT }, spawnNode);
-    // Stagger nodes along their own trajectory so it doesn't start as a
-    // single dot in the center on first paint.
-    nodes.forEach((n) => {
-      const t = Math.random() * Math.max(width, height) * 0.6;
-      n.x += n.vx * t;
-      n.y += n.vy * t;
-    });
+    const nodes: Node[] = Array.from({ length: NODE_COUNT }, () =>
+      spawnNode(reduceMotion),
+    );
 
-    const margin = 40;
     let frameId = 0;
 
     function draw() {
@@ -127,29 +135,48 @@ export function HeroNetworkBackground() {
 
     function step() {
       for (const n of nodes) {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (
-          n.x < -margin ||
-          n.x > width + margin ||
-          n.y < -margin ||
-          n.y > height + margin
-        ) {
-          Object.assign(n, spawnNode());
+        if (n.r < n.targetR) {
+          n.r = Math.min(n.targetR, n.r + n.radialSpeed);
         }
+        n.angle += n.angularSpeed;
+        n.x = centerX + Math.cos(n.angle) * n.r;
+        n.y = centerY + Math.sin(n.angle) * n.r;
       }
       draw();
       frameId = requestAnimationFrame(step);
     }
 
     if (reduceMotion) {
+      for (const n of nodes) {
+        n.x = centerX + Math.cos(n.angle) * n.r;
+        n.y = centerY + Math.sin(n.angle) * n.r;
+      }
       draw();
     } else {
       step();
     }
 
     function handleResize() {
+      const prevConfineRadius = confineRadius;
       resize();
+      // Rescale existing orbits to the new confinement radius so nodes
+      // never end up orbiting outside it after the viewport shrinks.
+      if (prevConfineRadius > 0) {
+        const ratio = confineRadius / prevConfineRadius;
+        for (const n of nodes) {
+          n.r *= ratio;
+          n.targetR *= ratio;
+        }
+      }
+      // Recompute positions from the rescaled r/angle around the new
+      // center — step() won't run this frame if reduced-motion has no
+      // rAF loop, and canvas.width/height above already cleared the
+      // bitmap, so draw() needs up-to-date coordinates right now.
+      for (const n of nodes) {
+        n.x = centerX + Math.cos(n.angle) * n.r;
+        n.y = centerY + Math.sin(n.angle) * n.r;
+      }
+      draw();
     }
     window.addEventListener("resize", handleResize);
 
