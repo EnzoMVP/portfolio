@@ -40,10 +40,10 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "hero" });
   const settings = await getSiteSettings();
 
-  const siteName = settings?.name || t("label");
+  const siteName = settings?.name || t("name");
   const description =
     pickLocale(settings?.tagline, locale as Locale) ||
-    t("manifesto").replace(/\n/g, " ");
+    `${t("role")} — ${t("location")}`;
   const ogImages = settings?.defaultOgImage
     ? [urlFor(settings.defaultOgImage).width(1200).height(630).fit("crop").url()]
     : undefined;

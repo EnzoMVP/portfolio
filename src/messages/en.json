@@ -8,8 +8,9 @@
     "contact": "Contact"
   },
   "hero": {
-    "label": "[ ML Engineer ]",
-    "manifesto": "Models are not magic,\nthey are decisions,\nmade deliberately.",
+    "location": "TODO: City, Country",
+    "name": "TODO: Your Name",
+    "role": "TODO: Machine Learning Engineer",
     "cta": "View projects"
   },
   "about": {

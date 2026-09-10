@@ -8,8 +8,9 @@
     "contact": "Contato"
   },
   "hero": {
-    "label": "[ ML Engineer ]",
-    "manifesto": "Modelos não são mágica,\nsão decisões,\ntomadas deliberadamente.",
+    "location": "TODO: Cidade, País",
+    "name": "TODO: Seu Nome",
+    "role": "TODO: Engenheiro(a) de Machine Learning",
     "cta": "Ver projetos"
   },
   "about": {
