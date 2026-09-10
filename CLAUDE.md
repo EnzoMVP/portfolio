@@ -57,6 +57,6 @@ All color/font tokens live in one `@theme` block in `src/app/globals.css` (Tailw
 
 ## Git Workflow
 
-- On finishing a full feature or a large change: run `/code-review` and only commit **after** that review — never commit before it. The user checks results themselves at localhost; don't generate screenshots as part of this flow.
-- For small adjustments (tweaking a color, spacing, copy, etc.): commit directly, no `/code-review` needed.
+- Small iterative changes (tweaking a color, spacing, copy, animation behavior, etc. while a section is still being dialed in) are **not** committed and do **not** go through `/code-review` — just leave them in the working tree. The user checks results themselves at localhost; don't generate screenshots as part of this flow.
+- Commit — and run `/code-review` right before that commit — only once a full section/feature is completely finished for the session, bundling everything built since the last commit.
 - Never commit `.env*` files (other than `.env.example`), API keys/tokens, or build artifacts (`node_modules/`, `.next/`). These are already covered by `.gitignore` — don't force-add them.
