@@ -3,7 +3,7 @@
     "hero": "Home",
     "about": "About",
     "skills": "Skills",
-    "studiesCertifications": "Education & Certifications",
+    "education": "Education",
     "projects": "Projects",
     "contact": "Contact"
   },
@@ -17,8 +17,11 @@
     "heading": "About",
     "body": "TODO: replace with real bio — a few sentences on your background, focus area within ML engineering, and what you're looking for."
   },
+  "education": {
+    "heading": "Education"
+  },
   "studies": {
-    "heading": "Education",
+    "heading": "Studies",
     "items": [
       {
         "school": "TODO: institution name",
@@ -38,7 +41,8 @@
     "readMore": "Read more"
   },
   "certifications": {
-    "heading": "Certifications"
+    "heading": "Certifications",
+    "empty": "Certifications will appear here once added in the CMS."
   },
   "contact": {
     "heading": "Contact",

@@ -16,7 +16,7 @@ export async function Contact() {
   const cvHref = locale === "pt-BR" ? "/cv/cv-pt.pdf" : "/cv/cv-en.pdf";
 
   return (
-    <SectionContainer id="contact" label="[ 06 ]" heading={t("heading")} tone="inverse">
+    <SectionContainer id="contact" label="[ 05 ]" heading={t("heading")} tone="inverse">
       <RevealOnScroll>
         <p className="max-w-xl text-lg text-fg-inverse/80">{t("intro")}</p>
         <div className="mt-8 flex flex-col gap-4 font-mono text-sm tracking-wide uppercase sm:flex-row sm:gap-10">

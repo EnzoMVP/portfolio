@@ -7,8 +7,8 @@ const navItems = [
   { key: "hero", id: "hero" },
   { key: "about", id: "about" },
   { key: "skills", id: "skills" },
-  { key: "studiesCertifications", id: "studies" },
   { key: "projects", id: "projects" },
+  { key: "education", id: "education" },
   { key: "contact", id: "contact" },
 ] as const;
 

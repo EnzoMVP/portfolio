@@ -31,9 +31,9 @@ export function NavLinks({ items }: { items: NavItem[] }) {
     // matching that, the one whose top edge is furthest down (closest to,
     // but still above, the scrollspy line) wins, i.e. the most recently
     // entered section rather than one already scrolled mostly past. If
-    // nothing currently matches (e.g. mid-scroll through an unlisted section
-    // like certifications, which shares the studies nav item), the last
-    // known active id is left as-is instead of being cleared.
+    // nothing currently matches (e.g. mid-scroll through a gap between
+    // sections), the last known active id is left as-is instead of being
+    // cleared.
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((entry) => entry.isIntersecting);

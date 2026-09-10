@@ -3,7 +3,7 @@
     "hero": "Início",
     "about": "Sobre",
     "skills": "Habilidades",
-    "studiesCertifications": "Formação & Certificações",
+    "education": "Educação",
     "projects": "Projetos",
     "contact": "Contato"
   },
@@ -16,6 +16,9 @@
   "about": {
     "heading": "Sobre",
     "body": "TODO: substituir pela bio real — algumas frases sobre sua trajetória, foco dentro de ML engineering e o que você está buscando."
+  },
+  "education": {
+    "heading": "Educação"
   },
   "studies": {
     "heading": "Formação",
@@ -38,7 +41,8 @@
     "readMore": "Ler mais"
   },
   "certifications": {
-    "heading": "Certificações"
+    "heading": "Certificações",
+    "empty": "As certificações vão aparecer aqui assim que forem adicionadas no CMS."
   },
   "contact": {
     "heading": "Contato",

@@ -13,7 +13,7 @@ export async function Projects() {
   ]);
 
   return (
-    <SectionContainer id="projects" label="[ 05 ]" heading={t("heading")}>
+    <SectionContainer id="projects" label="[ 03 ]" heading={t("heading")}>
       {projects.length === 0 ? (
         <p className="text-sm text-fg-muted">{t("empty")}</p>
       ) : (
