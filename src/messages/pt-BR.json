@@ -1,9 +1,9 @@
 {
   "nav": {
+    "hero": "Início",
     "about": "Sobre",
     "skills": "Habilidades",
-    "studies": "Formação",
-    "certifications": "Certificações",
+    "studiesCertifications": "Formação & Certificações",
     "projects": "Projetos",
     "contact": "Contato"
   },

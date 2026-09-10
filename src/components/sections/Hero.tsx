@@ -6,7 +6,10 @@ export async function Hero() {
   const t = await getTranslations("hero");
 
   return (
-    <section className="relative flex min-h-[85vh] flex-col justify-center overflow-hidden bg-bg-inverse px-6 text-fg-inverse">
+    <section
+      id="hero"
+      className="relative flex min-h-[85vh] flex-col justify-center overflow-hidden bg-bg-inverse px-6 text-fg-inverse"
+    >
       <HeroNetworkBackground />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg-inverse via-transparent to-bg-inverse/40" />
       <div className="relative z-10 mx-auto w-full max-w-5xl">
