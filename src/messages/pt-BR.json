@@ -15,7 +15,8 @@
   },
   "about": {
     "heading": "Sobre",
-    "body": "TODO: substituir pela bio real — algumas frases sobre sua trajetória, foco dentro de ML engineering e o que você está buscando."
+    "name": "Enzo Menezes Vaz Pinto",
+    "body": "Estudante de <b>Ciência da Computação</b> na <b>Universidade Federal Fluminense (UFF)</b>, com interesse em <b>Dados</b> e <b>Aprendizado de Máquina</b>. Atualmente em busca de uma oportunidade na área para colocar esse interesse em prática."
   },
   "education": {
     "heading": "Educação"

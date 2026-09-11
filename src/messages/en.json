@@ -15,7 +15,8 @@
   },
   "about": {
     "heading": "About",
-    "body": "TODO: replace with real bio — a few sentences on your background, focus area within ML engineering, and what you're looking for."
+    "name": "Enzo Menezes Vaz Pinto",
+    "body": "<b>Computer Science</b> student at <b>Universidade Federal Fluminense (UFF)</b>, with an interest in <b>Data</b> and <b>Machine Learning</b>. Currently looking for a role in the field to put that interest into practice."
   },
   "education": {
     "heading": "Education"
