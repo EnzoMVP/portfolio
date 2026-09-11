@@ -20,10 +20,20 @@ const WIDTHS = SKILLS.map((s) => estimateWidth(s.name));
 const TOTAL_WIDTH = WIDTHS.reduce((sum, w) => sum + w + PILL_GAP, 0);
 const CYCLE_SECONDS = TOTAL_WIDTH / SPEED_PX_PER_SEC;
 
+// The mirror trick below (see SkillLane) reverses which screen edge the belt
+// scrolls toward, but NOT the temporal order pills pass through a fixed
+// point — that's governed purely by array order. So the second lane gets
+// its own reversed skill list, starting from the last entry (Claude Code),
+// to actually read in the opposite order rather than just scroll the
+// opposite way.
+const SKILLS_REVERSED = [...SKILLS].reverse();
+const WIDTHS_REVERSED = SKILLS_REVERSED.map((s) => estimateWidth(s.name));
+
 // Repeated enough times that translating by exactly one list-width loops
 // seamlessly, with extra copies so a wide viewport's visible window never
 // reaches past the rendered content.
 const REPEATED = Array.from({ length: BUFFER_COPIES }, () => SKILLS).flat();
+const REPEATED_REVERSED = Array.from({ length: BUFFER_COPIES }, () => SKILLS_REVERSED).flat();
 
 function SkillPill({ skill, width }: { skill: SkillItem; width: number }) {
   const { Icon, name, color } = skill;
@@ -38,7 +48,15 @@ function SkillPill({ skill, width }: { skill: SkillItem; width: number }) {
   );
 }
 
-function SkillLane({ reverse = false }: { reverse?: boolean }) {
+function SkillLane({
+  skills,
+  widths,
+  reverse = false,
+}: {
+  skills: SkillItem[];
+  widths: number[];
+  reverse?: boolean;
+}) {
   // To run this lane the opposite direction without duplicating the strip
   // animation, flip the whole strip horizontally and then flip every pill
   // back — the strip's translateX keeps moving the same way, but viewed
@@ -48,9 +66,9 @@ function SkillLane({ reverse = false }: { reverse?: boolean }) {
     <div className="w-full overflow-hidden" aria-hidden="true">
       <div style={reverse ? { transform: "scaleX(-1)" } : undefined}>
         <div className="skill-lane-strip flex items-center" style={{ gap: PILL_GAP }}>
-          {REPEATED.map((skill, i) => (
+          {skills.map((skill, i) => (
             <div key={i} style={reverse ? { transform: "scaleX(-1)" } : undefined}>
-              <SkillPill skill={skill} width={WIDTHS[i % SKILLS.length]} />
+              <SkillPill skill={skill} width={widths[i % widths.length]} />
             </div>
           ))}
         </div>
@@ -118,8 +136,8 @@ export function SkillsMarquee() {
         ))}
       </ul>
       <div className="space-y-6 sm:space-y-8">
-        <SkillLane />
-        <SkillLane reverse />
+        <SkillLane skills={REPEATED} widths={WIDTHS} />
+        <SkillLane skills={REPEATED_REVERSED} widths={WIDTHS_REVERSED} reverse />
       </div>
     </>
   );
