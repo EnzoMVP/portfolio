@@ -19,11 +19,7 @@ There is no test suite configured.
 
 ### Sanity CMS
 
-```bash
-npx sanity login                              # one-time browser auth
-npx sanity init                               # create/link a project, dataset "production"
-npx sanity cors add https://<domain> --credentials   # after deploying, so /studio works in prod
-```
+One-time setup commands (initial project/dataset creation, CORS after deploy) are in the `sanity-setup` skill, not repeated here.
 
 Content is edited at `/studio` (embedded Sanity Studio, not a separate app). Until `NEXT_PUBLIC_SANITY_PROJECT_ID` is set (see `.env.example`), every query in `src/lib/sanity/queries.ts` short-circuits to `[]`/`null` via `isSanityConfigured` (`src/sanity/env.ts`) — sections render their empty-state copy instead of throwing. If Projects/Certifications look empty, check env vars before assuming a data-fetching bug. Skills is the exception — see below.
 
