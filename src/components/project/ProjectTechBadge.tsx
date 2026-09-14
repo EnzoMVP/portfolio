@@ -1,3 +1,5 @@
+"use client";
+
 import { getTechIcon } from "@/lib/project-tech-icons";
 
 export function ProjectTechBadge({ tag }: { tag: string }) {
