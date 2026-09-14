@@ -10,6 +10,7 @@ import { pickLocale } from "@/lib/sanity/locale";
 import { urlFor } from "@/lib/sanity/image";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import "../globals.css";
 
 const displayFont = Space_Grotesk({
@@ -83,9 +84,11 @@ export default async function LocaleLayout({
     >
       <body className="flex min-h-screen flex-col bg-bg font-sans text-fg antialiased">
         <NextIntlClientProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <SmoothScroll>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </SmoothScroll>
         </NextIntlClientProvider>
         <Analytics />
       </body>
