@@ -165,6 +165,40 @@ export function HeroNetworkBackground() {
       return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
     }
 
+    // Live ctx.shadowBlur is a GPU gaussian blur per draw call — 64 of them
+    // every frame saturated integrated GPUs site-wide (measured: hero ~30fps,
+    // other sections stuttering since the loop kept running off-screen).
+    // A node's glow only depends on its color and link count, and link count
+    // is clamped to MAX_GLOW_LINKS, so every possible look is prerendered
+    // once here — shadow included — and stamped with drawImage per frame.
+    const SPRITE_REF_RADIUS = 3.3; // mid of the 2..4.6 dotRadius range; sprites scale from this
+    const spritePad = SPRITE_REF_RADIUS + MAX_GLOW_BLUR * 2;
+    const spriteCss = spritePad * 2;
+    const sprites = new Map<string, HTMLCanvasElement[]>();
+    for (const color of palette) {
+      const levels: HTMLCanvasElement[] = [];
+      for (let links = 0; links <= MAX_GLOW_LINKS; links++) {
+        const glow = links / MAX_GLOW_LINKS;
+        const sprite = document.createElement("canvas");
+        sprite.width = sprite.height = Math.ceil(spriteCss * dpr);
+        const sctx = sprite.getContext("2d")!;
+        sctx.scale(dpr, dpr);
+        // "lighter" here too, so the dot adds onto its own bloom the same
+        // way it used to add onto the shadow drawn straight on the canvas.
+        sctx.globalCompositeOperation = "lighter";
+        sctx.fillStyle = whiten(color, glow * MAX_WHITEN);
+        sctx.shadowColor = sctx.fillStyle;
+        // shadowBlur ignores the ctx transform (always device pixels), same
+        // as it did on the main canvas — so no dpr factor here either.
+        sctx.shadowBlur = MAX_GLOW_BLUR * glow;
+        sctx.beginPath();
+        sctx.arc(spritePad, spritePad, SPRITE_REF_RADIUS, 0, Math.PI * 2);
+        sctx.fill();
+        levels.push(sprite);
+      }
+      sprites.set(color, levels);
+    }
+
     function advance(n: Node, now: number, dt: number) {
       const isMoving = mouse.active && now - mouse.lastMoveAt < IDLE_TIMEOUT;
 
@@ -274,7 +308,6 @@ export function HeroNetworkBackground() {
     function draw() {
       ctx!.clearRect(0, 0, width, height);
       ctx!.globalCompositeOperation = "lighter";
-      ctx!.shadowBlur = 0;
 
       for (const n of nodes) n.linkCount = 0;
 
@@ -303,17 +336,13 @@ export function HeroNetworkBackground() {
       // white, gains opacity, and picks up a soft bloom; a node with few or
       // no links stays dim and closer to its base palette color.
       for (const n of nodes) {
-        const glow = Math.min(n.linkCount / MAX_GLOW_LINKS, 1);
+        const links = Math.min(n.linkCount, MAX_GLOW_LINKS);
+        const glow = links / MAX_GLOW_LINKS;
         ctx!.globalAlpha = MIN_NODE_ALPHA + (MAX_NODE_ALPHA - MIN_NODE_ALPHA) * glow;
-        ctx!.fillStyle = whiten(n.color, glow * MAX_WHITEN);
-        ctx!.shadowColor = ctx!.fillStyle;
-        ctx!.shadowBlur = MAX_GLOW_BLUR * glow;
-        ctx!.beginPath();
-        ctx!.arc(n.x, n.y, n.dotRadius, 0, Math.PI * 2);
-        ctx!.fill();
+        const size = spriteCss * (n.dotRadius / SPRITE_REF_RADIUS);
+        ctx!.drawImage(sprites.get(n.color)![links], n.x - size / 2, n.y - size / 2, size, size);
       }
 
-      ctx!.shadowBlur = 0;
       ctx!.globalAlpha = 1;
     }
 
@@ -337,23 +366,55 @@ export function HeroNetworkBackground() {
       frameId = requestAnimationFrame(step);
     }
 
-    if (reduceMotion) {
-      draw();
-    } else {
-      step(performance.now());
+    // Only simulate while the hero is actually on screen — the loop used to
+    // keep drawing for the whole visit, costing GPU time in every other
+    // section. Resuming resets lastTime so the first dt isn't the whole
+    // off-screen gap (the 50ms clamp would hide that, but this is exact).
+    let visible = false;
+    function startLoop() {
+      if (frameId || reduceMotion) return;
+      lastTime = performance.now();
+      frameId = requestAnimationFrame(step);
     }
-
-    function handleResize() {
-      resize();
-      // canvas.width/height assignment above clears the bitmap; redraw
-      // immediately so reduced-motion (no rAF loop) doesn't go blank.
-      // Clamp existing nodes into the new bounds so a shrink doesn't
-      // strand them off-canvas.
-      for (const n of nodes) {
-        n.x = Math.min(Math.max(n.x, 0), width);
-        n.y = Math.min(Math.max(n.y, 0), height);
+    function stopLoop() {
+      if (frameId) cancelAnimationFrame(frameId);
+      frameId = 0;
+    }
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      // Entries are queued in order; if the canvas crossed the edge more than
+      // once before this callback ran, only the last one is current.
+      visible = entries[entries.length - 1].isIntersecting;
+      if (visible) {
+        startLoop();
+      } else {
+        stopLoop();
+        mouse.active = false;
       }
-      draw();
+    });
+    visibilityObserver.observe(canvas);
+
+    // Paint the warmed-up frame right away rather than waiting on the
+    // observer's first callback (and it's the only frame under reduced motion).
+    draw();
+
+    // Resize events fire many times per second while dragging a window;
+    // reallocating the canvas bitmap once per frame is enough.
+    let resizeFrame = 0;
+    function handleResize() {
+      if (resizeFrame) return;
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        resize();
+        // canvas.width/height assignment above clears the bitmap; redraw
+        // immediately so reduced-motion (no rAF loop) doesn't go blank.
+        // Clamp existing nodes into the new bounds so a shrink doesn't
+        // strand them off-canvas.
+        for (const n of nodes) {
+          n.x = Math.min(Math.max(n.x, 0), width);
+          n.y = Math.min(Math.max(n.y, 0), height);
+        }
+        draw();
+      });
     }
     window.addEventListener("resize", handleResize);
 
@@ -362,6 +423,7 @@ export function HeroNetworkBackground() {
     // are checked against the canvas rect to know when the cursor is
     // actually over it.
     function handlePointerMove(e: PointerEvent) {
+      if (!visible) return;
       const rect = canvas!.getBoundingClientRect();
       const localX = e.clientX - rect.left;
       const localY = e.clientY - rect.top;
@@ -390,7 +452,9 @@ export function HeroNetworkBackground() {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", handlePointerLeave);
-      if (frameId) cancelAnimationFrame(frameId);
+      visibilityObserver.disconnect();
+      stopLoop();
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
     };
   }, []);
 

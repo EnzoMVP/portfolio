@@ -93,10 +93,12 @@ export function NavLinks({ items }: { items: NavItem[] }) {
         </a>
       ))}
       {indicator && (
+        // A 1px bar stretched with scaleX rather than animating left/width,
+        // which would run layout on every frame of the spring.
         <motion.div
-          className="absolute -bottom-1 h-[2px] bg-fg"
+          className="absolute -bottom-1 left-0 h-[2px] w-px origin-left bg-fg"
           initial={false}
-          animate={{ left: indicator.left, width: indicator.width, opacity: 1 }}
+          animate={{ x: indicator.left, scaleX: indicator.width, opacity: 1 }}
           transition={{ type: "spring", stiffness: 420, damping: 38 }}
         />
       )}

@@ -20,14 +20,29 @@ export async function About() {
            instead) and the rest tucks behind the card edge, dimmed
            through it. Reads as two distinct lights circling the card
            rather than a uniform haze. */
+        /* Full-size track the orbs move across. Its own size (not the
+           content's) defines it, so it can be a size container — that's
+           what lets the keyframes below use cqw/cqh to reach the far
+           corners with transform alone. Animating top/left instead forced
+           layout plus a re-raster of both 50px-blurred orbs every frame;
+           a translated layer is rasterized once and just moved. */
+        .about-orb-track {
+          position: absolute;
+          inset: 0;
+          container-type: size;
+          pointer-events: none;
+        }
         .about-orb {
           position: absolute;
+          top: -6rem;
+          left: -6rem;
           width: 20rem;
           height: 20rem;
           border-radius: 9999px;
           filter: blur(50px);
           background: color-mix(in srgb, var(--color-fg-inverse) 70%, transparent);
           z-index: 0;
+          will-change: transform;
           /* --orbit picks which keyframes (and so which starting corner)
              this orb uses — the only thing that differs between the two,
              so it's the only thing not shared here. */
@@ -59,48 +74,41 @@ export async function About() {
         .in-view .about-orb-br {
           animation-play-state: running, running;
         }
+        /* Same path as before (top-left corner at -6rem → far corner at
+           100% - 14rem), expressed as an offset from the -6rem origin:
+           100% - 14rem - (-6rem) = 100% - 8rem. */
         @keyframes about-orbit {
           0% {
-            top: -6rem;
-            left: -6rem;
+            transform: translate(0, 0);
           }
           25% {
-            top: -6rem;
-            left: calc(100% - 14rem);
+            transform: translate(calc(100cqw - 8rem), 0);
           }
           50% {
-            top: calc(100% - 14rem);
-            left: calc(100% - 14rem);
+            transform: translate(calc(100cqw - 8rem), calc(100cqh - 8rem));
           }
           75% {
-            top: calc(100% - 14rem);
-            left: -6rem;
+            transform: translate(0, calc(100cqh - 8rem));
           }
           100% {
-            top: -6rem;
-            left: -6rem;
+            transform: translate(0, 0);
           }
         }
         @keyframes about-orbit-alt {
           0% {
-            top: calc(100% - 14rem);
-            left: calc(100% - 14rem);
+            transform: translate(calc(100cqw - 8rem), calc(100cqh - 8rem));
           }
           25% {
-            top: calc(100% - 14rem);
-            left: -6rem;
+            transform: translate(0, calc(100cqh - 8rem));
           }
           50% {
-            top: -6rem;
-            left: -6rem;
+            transform: translate(0, 0);
           }
           75% {
-            top: -6rem;
-            left: calc(100% - 14rem);
+            transform: translate(calc(100cqw - 8rem), 0);
           }
           100% {
-            top: calc(100% - 14rem);
-            left: calc(100% - 14rem);
+            transform: translate(calc(100cqw - 8rem), calc(100cqh - 8rem));
           }
         }
         /* Hidden until the section is first scrolled into view, then
@@ -147,13 +155,8 @@ export async function About() {
           .about-orb-br {
             animation: none;
           }
-          .about-orb-tl {
-            top: -6rem;
-            left: -6rem;
-          }
           .about-orb-br {
-            top: calc(100% - 14rem);
-            left: calc(100% - 14rem);
+            transform: translate(calc(100cqw - 8rem), calc(100cqh - 8rem));
           }
           .about-signature {
             animation: none;

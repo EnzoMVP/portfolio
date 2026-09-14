@@ -36,8 +36,10 @@ export function AboutIntroTrigger({ children }: { children: ReactNode }) {
 
   return (
     <div ref={ref} className={classes}>
-      <div className="about-orb about-orb-tl" />
-      <div className="about-orb about-orb-br" />
+      <div className="about-orb-track">
+        <div className="about-orb about-orb-tl" />
+        <div className="about-orb about-orb-br" />
+      </div>
       {children}
     </div>
   );
