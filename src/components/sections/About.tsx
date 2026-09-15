@@ -43,36 +43,28 @@ export async function About() {
           background: color-mix(in srgb, var(--color-fg-inverse) 70%, transparent);
           z-index: 0;
           will-change: transform;
-          /* --orbit picks which keyframes (and so which starting corner)
-             this orb uses — the only thing that differs between the two,
-             so it's the only thing not shared here. */
-          animation:
-            var(--orbit) 0.6s linear 3 forwards,
-            var(--orbit) 22s linear infinite 1.8s;
-          animation-play-state: paused, paused;
         }
-        /* Two animations per orb: a short, fast burst of laps on load
-           (3 laps in 1.8s), then the normal slow loop picks up right where
-           the burst's last keyframe left off — same duration and delay for
-           both, so the handoff has no jump. about-orbit-alt is the same
-           path as about-orbit, just starting from the opposite corner, so
-           the pair stays diagonally opposite through both the fast burst
-           and the slow loop (a negative-delay phase shift can't survive a
-           positive-delayed handoff, so a mirrored keyframe set does the
-           job instead). */
+        /* --orbit picks which keyframes (and so which starting corner)
+           this orb uses. about-orbit-alt is the same path as about-orbit,
+           just starting from the opposite corner, so the pair stays
+           diagonally opposite the whole loop. */
+        .about-orb {
+          animation: var(--orbit) 22s linear infinite;
+          animation-play-state: paused;
+        }
         .about-orb-tl {
           --orbit: about-orbit;
         }
         .about-orb-br {
           --orbit: about-orbit-alt;
+          transform: translate(calc(100cqw - 8rem), calc(100cqh - 8rem));
         }
         /* Paused by default (above) — AboutIntroTrigger's real
            IntersectionObserver only adds .in-view while this is actually
            on screen, instead of burning CPU/GPU on it indefinitely. It
            toggles back off on scroll-out too, unlike .has-entered below. */
-        .in-view .about-orb-tl,
-        .in-view .about-orb-br {
-          animation-play-state: running, running;
+        .in-view .about-orb {
+          animation-play-state: running;
         }
         /* Same path as before (top-left corner at -6rem → far corner at
            100% - 14rem), expressed as an offset from the -6rem origin:
@@ -112,14 +104,13 @@ export async function About() {
           }
         }
         /* Hidden until the section is first scrolled into view, then
-           flickers once, timed to finish alongside the orbs' fast burst,
-           and stays visible for good — .has-entered latches true and
+           flickers once and stays visible for good — .has-entered latches true and
            never resets, so this doesn't replay on later re-entries. */
         .about-signature {
           opacity: 0;
         }
         .has-entered .about-signature {
-          animation: about-signature-flicker 1.8s linear forwards;
+          animation: about-signature-flicker 2.4s linear forwards;
         }
         @keyframes about-signature-flicker {
           0% {
@@ -151,14 +142,11 @@ export async function About() {
           }
         }
         @media (prefers-reduced-motion: reduce) {
-          .about-orb-tl,
-          .about-orb-br {
+          .about-orb {
             animation: none;
           }
-          .about-orb-br {
-            transform: translate(calc(100cqw - 8rem), calc(100cqh - 8rem));
-          }
-          .about-signature {
+          .about-signature,
+          .has-entered .about-signature {
             animation: none;
             opacity: 1;
           }

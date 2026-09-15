@@ -11,9 +11,8 @@ import { useInView } from "framer-motion";
  *   notion of visibility and would otherwise burn CPU/GPU for as long as
  *   the tab stays open. `.in-view` toggles with the real viewport state
  *   and only unpauses the orbits while they're actually visible.
- * - The signature's one-time flicker, and the orbits' one-time fast
- *   intro burst, are meant to play once the user actually sees this
- *   section — not during initial mount while it's still hidden behind
+ * - The signature's one-time flicker is meant to play once the user
+ *   actually sees this section — not during initial mount while it's still hidden behind
  *   Hero. `.has-entered` latches true the first time this is seen and
  *   never resets, so that one-off intro isn't replayed on every re-entry.
  *
@@ -24,7 +23,11 @@ import { useInView } from "framer-motion";
 export function AboutIntroTrigger({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "200px 0px" });
-  const hasEntered = useInView(ref, { margin: "200px 0px", once: true });
+  // No positive margin here (unlike inView above): Hero is only 85vh tall,
+  // so a 200px look-ahead already counted this panel as "seen" on initial
+  // load and the one-off flicker played out of sight. Require a real chunk
+  // of the panel to be on screen instead.
+  const hasEntered = useInView(ref, { amount: 0.35, once: true });
 
   const classes = [
     "about-orbit-wrap relative overflow-hidden rounded-2xl bg-bg-inverse p-12 sm:p-16",
