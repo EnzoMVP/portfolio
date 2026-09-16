@@ -19,17 +19,15 @@
     "body": "<b>Computer Science</b> student at <b>Universidade Federal Fluminense (UFF)</b>, with an interest in <b>Data</b> and <b>Machine Learning</b>. Currently looking for a role in the field to put that interest into practice."
   },
   "education": {
-    "heading": "Education"
-  },
-  "studies": {
-    "heading": "Studies",
-    "items": [
-      {
-        "school": "TODO: institution name",
-        "degree": "TODO: degree / program",
-        "period": "TODO: e.g. 2022 — 2026"
-      }
-    ]
+    "heading": "Education",
+    "present": "Present",
+    "topics": {
+      "graduation": "Graduation",
+      "course": "Course"
+    },
+    "expectedCompletion": "Expected completion",
+    "repository": "Repository",
+    "certificate": "Certificate"
   },
   "skills": {
     "heading": "Skills"
@@ -40,10 +38,6 @@
     "viewRepo": "View repo",
     "viewLive": "Live demo (may be down)",
     "readMore": "Read more"
-  },
-  "certifications": {
-    "heading": "Certifications",
-    "empty": "Certifications will appear here once added in the CMS."
   },
   "contact": {
     "heading": "Contact",

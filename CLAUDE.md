@@ -21,7 +21,7 @@ There is no test suite configured.
 
 One-time setup commands (initial project/dataset creation, CORS after deploy) are in the `sanity-setup` skill, not repeated here.
 
-Content is edited at `/studio` (embedded Sanity Studio, not a separate app). Until `NEXT_PUBLIC_SANITY_PROJECT_ID` is set (see `.env.example`), every query in `src/lib/sanity/queries.ts` short-circuits to `[]`/`null` via `isSanityConfigured` (`src/sanity/env.ts`) — sections render their empty-state copy instead of throwing. If Projects/Certifications look empty, check env vars before assuming a data-fetching bug. Skills is the exception — see below.
+Content is edited at `/studio` (embedded Sanity Studio, not a separate app). Until `NEXT_PUBLIC_SANITY_PROJECT_ID` is set (see `.env.example`), every query in `src/lib/sanity/queries.ts` short-circuits to `[]`/`null` via `isSanityConfigured` (`src/sanity/env.ts`) — sections render their empty-state copy instead of throwing. If Projects look empty, check env vars before assuming a data-fetching bug. Skills is the exception — see below.
 
 ## Architecture
 
@@ -33,13 +33,13 @@ Content is edited at `/studio` (embedded Sanity Studio, not a separate app). Unt
 
 - `src/i18n/routing.ts` / `request.ts` / `navigation.ts` — next-intl config (`locales: ["en", "pt-BR"]`, `defaultLocale: "en"`, `localePrefix: "as-needed"`, so EN serves from `/` and PT-BR from `/pt-BR`).
 - `src/proxy.ts` — locale-detection middleware (Next 16 name for `middleware.ts`); its matcher explicitly excludes `/studio` and `/api`.
-- `src/messages/en.json` / `pt-BR.json` — static UI copy (nav, hero manifesto, Studies/Education entries, buttons). Add new keys to **both** files.
+- `src/messages/en.json` / `pt-BR.json` — static UI copy (nav, hero manifesto, Education timeline labels, buttons). Add new keys to **both** files.
 - CMS content (Project/Certification/Site Settings text) is **not** routed through next-intl messages. It's localized at the schema level instead: fields use the `localeString` / `localeText` / `localeBlockContent` object types (`src/sanity/schemaTypes/objects/`), each holding `{ en, ptBR }` side by side in one Sanity document. `pickLocale()` (`src/lib/sanity/locale.ts`) resolves the display string per-locale with an EN fallback. This was a deliberate choice over Sanity's Document Internationalization plugin given the low content volume (a couple of projects/certs) — don't introduce document-per-locale duplication without revisiting that tradeoff.
 - `Skill.category` and `Skill.name`/`Certification.issuer` are intentionally **not** localized (proper nouns / short technical labels); category display labels are translated via `skills.categories.*` in the message files instead.
 
 ### Sanity
 
-- Schema source of truth: `src/sanity/schemaTypes/*` (types: `project`, `skill`, `certification`, `siteSettings`, plus the locale object types). Registered in `schemaTypes/index.ts`, consumed by root `sanity.config.ts` (which powers the embedded `/studio` route at `src/app/studio/[[...tool]]/page.tsx`). The `skill` schema and `getSkills()` (`src/lib/sanity/queries.ts`) are currently unused — see the Skills note below — kept in case that section moves back to the CMS.
+- Schema source of truth: `src/sanity/schemaTypes/*` (types: `project`, `skill`, `certification`, `siteSettings`, plus the locale object types). Registered in `schemaTypes/index.ts`, consumed by root `sanity.config.ts` (which powers the embedded `/studio` route at `src/app/studio/[[...tool]]/page.tsx`). The `skill`/`certification` schemas and `getSkills()`/`getCertifications()` (`src/lib/sanity/queries.ts`) are currently unused — see the Skills and Education notes below — kept in case those sections move back to the CMS.
 - Data access goes through `src/lib/sanity/queries.ts` (GROQ) → `client.ts` → components. Never query Sanity directly from a component.
 - `next.config.ts` sets `serverExternalPackages: ["sanity", "next-sanity", "@sanity/vision"]`. This is required, not optional: Turbopack (the default bundler for both `next dev` and `next build` in v16) otherwise tries to pull Sanity's client-only bundle into the RSC graph and fails resolving `swr`'s `react-server` export condition. If you see a build error about `swr`/`react-server` mentioning Sanity files, check this config first.
 
@@ -49,9 +49,11 @@ All color/font tokens live in one `@theme` block in `src/app/globals.css` (Tailw
 
 ### Content still owned by the site owner (not in this repo's code)
 
-`src/messages/*.json` has literal `TODO:` placeholders for `about.body` and `studies.items`; `public/cv/cv-en.pdf` / `cv-pt.pdf` are placeholder PDFs. Real Projects/Certifications are added through `/studio`, not committed as code.
+`src/messages/*.json` has a literal `TODO:` placeholder for `about.body`; `public/cv/cv-en.pdf` / `cv-pt.pdf` are placeholder PDFs. Real Projects are added through `/studio`, not committed as code.
 
 **Skills is the one exception**: the marquee (`src/components/sections/Skills.tsx` + `SkillsMarquee.tsx`) reads a hardcoded list from `src/lib/skills-data.ts` (name, react-icons brand icon, official brand color per entry) instead of Sanity — a deliberate call for this specific curated set of logo badges, not a temporary stub. Editing skills in `/studio` has no effect on this section; edit `skills-data.ts` directly.
+
+**Education works the same way**: it is one vertical timeline (degrees, courses, … mixed) fed by `src/lib/timeline-data.ts`, not by Sanity. Each entry has a `topic` (one card component per topic in `src/components/timeline/cards/`), an `importance` (1–3, drives prominence) and `start`/`end` months (`end: null` = ongoing). Placement is computed by `layoutTimeline()` (`src/lib/timeline-layout.ts`): oldest first, present at the bottom, with grid lines at every start/end month and row heights proportional to elapsed time (`PX_PER_MONTH` in `Education.tsx`), so each event starts at the height of its own start date. The degree (`graduation`) always sits alone on the left; every other topic goes on the right, where overlapping entries stack instead of sharing rows. To add a topic, add a variant to the `TimelineEvent` union, its side in `SIDE_BY_TOPIC`, a card, and a `education.topics.*` label in both message files.
 
 ## Git Workflow
 
