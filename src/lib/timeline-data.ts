@@ -73,6 +73,6 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
       ptBR: "Fundamentos de IA com Python, de busca, lógica e raciocínio probabilístico a machine learning, redes neurais e NLP com Transformers — os 12 projetos concluídos, de um jogador de Jogo da Velha com Minimax a uma CNN de placas de trânsito e uma análise das cabeças de atenção do BERT.",
     },
     repositoryUrl: "https://github.com/EnzoMVP/Harvard-CS50-AI",
-    certificateNote: { en: "Certificate not purchased", ptBR: "Certificado não adquirido" },
+    certificateUrl: "https://certificates.cs50.io/67702f70-2387-4a2a-b9a5-563679ba052d.pdf",
   },
 ];
