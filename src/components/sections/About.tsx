@@ -8,7 +8,7 @@ export async function About() {
   const t = await getTranslations("about");
 
   return (
-    <SectionContainer id="about" label="[ 01 ]" heading={t("heading")}>
+    <SectionContainer id="about" heading={t("heading")}>
       <style>{`
         /* Two glowing orbs sitting on the dark outer panel, centered right
            on the inner glass card's corners. Each orb is 20rem wide but

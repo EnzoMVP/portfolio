@@ -29,7 +29,6 @@ export async function Contact() {
         }
       `}</style>
       <div className="mx-auto max-w-5xl px-6 pt-20 sm:pt-28">
-        <p className="mb-3 font-mono text-xs tracking-widest text-fg-muted uppercase">[ 05 ]</p>
         <h2 className="mb-10 font-display text-2xl font-bold tracking-tight uppercase sm:text-3xl">
           {t("heading")}
         </h2>

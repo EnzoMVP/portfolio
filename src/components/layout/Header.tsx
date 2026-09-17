@@ -24,12 +24,14 @@ export async function Header() {
   const linkedinUrl = settings?.linkedinUrl || "https://www.linkedin.com/in/enzo-mvp/";
 
   return (
+    // `sticky` (position: sticky) already establishes the containing block
+    // the mobile menu panel positions against — no separate `relative` needed.
     <header className="sticky top-0 z-40 border-b border-border/60 bg-bg/70 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Link href="/" className="font-display text-sm font-bold tracking-tight uppercase">
           Portfolio
         </Link>
-        <NavLinks items={items} />
+        <NavLinks items={items} openLabel={t("openMenu")} closeLabel={t("closeMenu")} />
         {/* From xl up there's room outside the centered max-w-5xl row, so
             the LinkedIn icon breaks out to the header's own right edge
             (the sticky header is its containing block); below that it

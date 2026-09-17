@@ -42,7 +42,6 @@ export async function Projects() {
       }}
     >
       <div className="mx-auto max-w-5xl px-6 pt-20 sm:pt-28">
-        <p className="mb-3 font-mono text-xs tracking-widest text-surface-1 uppercase">[ 03 ]</p>
         <h2 className="font-display text-2xl font-bold tracking-tight uppercase sm:text-3xl">
           {t("heading")}
         </h2>

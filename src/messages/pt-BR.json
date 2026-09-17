@@ -5,7 +5,9 @@
     "skills": "Habilidades",
     "education": "Educação",
     "projects": "Projetos",
-    "contact": "Contato"
+    "contact": "Contato",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu"
   },
   "hero": {
     "location": "Niterói, Brasil",
@@ -19,17 +21,15 @@
     "body": "Estudante de <b>Ciência da Computação</b> na <b>Universidade Federal Fluminense (UFF)</b>, com interesse em <b>Dados</b> e <b>Aprendizado de Máquina</b>. Atualmente em busca de uma oportunidade na área para colocar esse interesse em prática."
   },
   "education": {
-    "heading": "Educação"
-  },
-  "studies": {
-    "heading": "Formação",
-    "items": [
-      {
-        "school": "TODO: nome da instituição",
-        "degree": "TODO: curso / programa",
-        "period": "TODO: ex. 2022 — 2026"
-      }
-    ]
+    "heading": "Educação",
+    "present": "Atual",
+    "topics": {
+      "graduation": "Graduação",
+      "course": "Curso"
+    },
+    "expectedCompletion": "Conclusão prevista",
+    "repository": "Repositório",
+    "certificate": "Certificado"
   },
   "skills": {
     "heading": "Habilidades"
@@ -40,10 +40,6 @@
     "viewRepo": "Ver repositório",
     "viewLive": "Demo ao vivo (pode estar fora do ar)",
     "readMore": "Ler mais"
-  },
-  "certifications": {
-    "heading": "Certificações",
-    "empty": "As certificações vão aparecer aqui assim que forem adicionadas no CMS."
   },
   "contact": {
     "heading": "Contato",

@@ -6,6 +6,11 @@ import { Projects } from "@/components/sections/Projects";
 import { Education } from "@/components/sections/Education";
 import { Contact } from "@/components/sections/Contact";
 
+// The page is statically generated, but the Education timeline measures
+// ongoing events up to the current month — regenerate daily so "now" doesn't
+// stay frozen at the last deploy.
+export const revalidate = 86400;
+
 export default async function HomePage({
   params,
 }: PageProps<"/[locale]">) {
